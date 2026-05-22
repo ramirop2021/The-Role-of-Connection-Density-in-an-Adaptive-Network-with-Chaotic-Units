@@ -1,129 +1,141 @@
 # The Role of Connection Density in an Adaptive Network with Chaotic Units
 
-This repository contains the source code, simulation data, and analysis tools for the study:
+This repository contains source code, simulation data, and analysis notebooks for the study:
 
-**“The Role of Connection Density in an Adaptive Network with Chaotic Units”**
+**"The Role of Connection Density in an Adaptive Network with Chaotic Units"**
 
-In this work, we investigate how the average degree of connectivity, considered as a density parameter, shapes the global dynamics and structural properties of adaptive networks composed of chaotic units. Inspired by the chaotic map networks of Kaneko [(Phys. Rev. Lett., 1989)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.63.219) and [(Physica D, 1994)](https://www.sciencedirect.com/science/article/abs/pii/0167278994902747), and subsequent adaptive extensions such as Gong and van Leeuwen [(EPL, 2004)](https://iopscience.iop.org/article/10.1209/epl/i2003-10287-7), we focus on how varying connection density drives the emergence of small-worldness, clustering, and modular organization, phenomena relevant to neural systems.
-
----
-
-## 📁 Repository Structure
-
-```
-├── src/                      # Source code modules
-│   ├── functions.py          # Network metric computation functions
-│   ├── model.py              # Kaneko adaptive network model implementation
-│   └── utils.py              # Utility functions
-│
-├── results/                  # Processed network metrics and outputs
-│   └── results_p*/           # Organized by rewiring probability p
-│       └── simulation_*/     # Multiple repetitions
-│           └── networks/     # Matrices used for metric analysis
-│
-├── figures/                  # Generated plots for the paper
-├── analysis.ipynb           # Jupyter Notebook for analyzing results
-├── main.py                  # Entry point for simulations
-├── requirements.txt         # Python dependencies
-└── README.md                # Project documentation
-```
+We investigate how the average degree of connectivity, used here as a density parameter, shapes the global dynamics and structural properties of adaptive networks composed of chaotic units. The model is inspired by chaotic map networks introduced by Kaneko and by subsequent adaptive extensions such as Gong and van Leeuwen, with emphasis on small-world structure, clustering, node loss, and modular organization.
 
 ---
 
-## 🧪 How to Run the Simulations
+## Repository Structure
 
-### 1. Clone the repository
+```text
+src/                    Source code modules
+  functions.py          Network and community metric computation
+  model.py              Kaneko adaptive network model implementation
+  utils.py              Utility functions for saving outputs
+
+results/                Processed simulation data used by the notebooks
+  results_p*/           Results organized by connection probability p
+    simulation_*/       Independent realizations
+      networks/         Adjacency matrices for metric and figure analysis
+      states/           Node-state snapshots
+
+plots_paper/            Figures generated for the manuscript
+analysis - 2026.ipynb   Main notebook used to generate the current paper figures
+main.py                 Entry point for running new simulations
+config.json             Simulation configuration
+requirements.txt        Python dependencies
+README.md               Project documentation
+LICENSE                 MIT license
+```
+
+---
+
+## How to Run the Simulations
+
+1. Clone the repository:
+
 ```bash
 git clone https://github.com/ramirop2021/The-Role-of-Connection-Density-in-an-Adaptive-Network-with-Chaotic-Units.git
 cd The-Role-of-Connection-Density-in-an-Adaptive-Network-with-Chaotic-Units
 ```
 
-### 2. Create a virtual environment (optional but recommended)
+2. Create a virtual environment, optional but recommended:
+
 ```bash
 python -m venv venv
-source venv/bin/activate        # Linux/macOS
+source venv/bin/activate      # Linux/macOS
 venv\Scripts\activate.bat     # Windows
 ```
 
-### 3. Install dependencies
+3. Install dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Run the main simulation script
+4. Run the main simulation script:
+
 ```bash
 python main.py
 ```
 
-> Simulations are automatically saved under `results/` with organized folder structure.
+New simulation outputs are written to folders named `results_p*/`. The analysis notebook expects the processed manuscript data under `results/results_p*/`, matching the structure included in this repository.
 
 ---
 
-## 📊 Jupyter Notebook: `analysis.ipynb`
+## Analysis Notebook
 
-This notebook allows you to **reproduce and visualize all the metrics and figures** presented in the paper without the need to re-run the simulations.  
+The notebook `analysis - 2026.ipynb` reproduces the figures currently used in the manuscript. It loads stored adjacency matrices, node states, and metric files from `results/`, and writes manuscript figures to `plots_paper/`.
 
-### Contents
-- Automatic loading of adjacency matrices stored in `results/`.
-- Computation of:
-  - Average clustering coefficient.
-  - Average shortest path length.
-  - *Small-world* index.
-  - Modular structure via Louvain (cluster sizes and number of clusters).
-  - Degree distribution.
-- Generation of the main plots used in the manuscript.
+The current figure outputs are organized as:
 
-> **Note:** All scripts and notebooks assume they are executed from the root of the repository, as the paths to `results/` and `plots_paper/` are relative to the current working directory.  
-> For example:
-> ```bash
-> cd The-Role-of-Connection-Density-in-an-Adaptive-Network-with-Chaotic-Units
-> jupyter notebook analysis.ipynb
-> ```
-> Running it from another location may cause file or folder not found errors.
+```text
+plots_paper/fig1/       Community-level temporal metrics
+plots_paper/fig2/       Clustering, path length, and small-world index
+plots_paper/fig3/       Degree distributions
+plots_paper/fig4/       Node and edge betweenness distributions
+plots_paper/fig5/       Louvain community snapshots across densities
+plots_paper/fig6/       Louvain snapshots for the representative intermediate-density case
+plots_paper/fig7/       Louvain snapshots for the representative high-density case
+```
+
+All notebooks assume they are executed from the root of the repository, because paths to `results/` and `plots_paper/` are relative paths.
+
+```bash
+jupyter notebook "analysis - 2026.ipynb"
+```
+
+A working LaTeX installation is required to render the paper-style figures, since the plotting cells use Matplotlib with `usetex=True`.
+
+### Notation Note
+
+The code and output files keep the legacy variable name `omega` for the small-world index. In the manuscript, the same quantity is denoted as `\sigma`, following the conventional notation:
+
+```text
+sigma = (C / C_rand) / (L / L_rand)
+```
+
+Thus, the variable `omega` in `network_metrics.txt` corresponds to `sigma` in the paper.
 
 ---
 
-## 🔧 Dependencies
+## Dependencies
+
+The Python dependencies are listed in `requirements.txt`:
 
 - numpy
 - pandas
 - networkx
 - matplotlib
-- community (python-louvain)
-- tqdm
+- numba
+- python-louvain
 
-All dependencies are listed in `requirements.txt`.
-
----
-
-## 📬 Contact
-
-If you have questions or want to contribute, feel free to reach out:
-
-**Ramiro Plüss**  
-
-Email: rpluss@itba.edu.ar
-
-LinkedIn: [https://www.linkedin.com/in/ramiropluss/](https://www.linkedin.com/in/ramiropluss/)
-
-GitHub: [https://github.com/ramirop2021](https://github.com/ramirop2021)  
+Jupyter is needed to run the notebook interactively, and LaTeX is needed for the final paper-style rendering of figures.
 
 ---
 
-## 📄 Citation
+## Citation
 
 If you use this code or the data provided in this work, please cite the associated research paper:
 
-Ramiro Plüss, Pablo Martín Gleiser.  
+Ramiro Pluss, Pablo Martin Gleiser.  
 "The Role of Connection Density in an Adaptive Network with Chaotic Units."  
 *arXiv preprint* [arXiv:2505.11437](https://arxiv.org/abs/2505.11437)
 
 ---
 
-## 📑 License
+## Contact
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+Ramiro Pluss  
+Email: rpluss@itba.edu.ar  
+LinkedIn: [https://www.linkedin.com/in/ramiropluss/](https://www.linkedin.com/in/ramiropluss/)  
+GitHub: [https://github.com/ramirop2021](https://github.com/ramirop2021)
 
+---
 
+## License
 
-
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.

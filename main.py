@@ -13,7 +13,7 @@ def main():
     parameters = read_json(path_json)
 
     # Parameters
-    N = parameters["N"]
+    N_init = parameters["N"]
     T = parameters["T"]
     a = parameters["a"]
     time_steps = parameters["time_steps"]
@@ -28,7 +28,7 @@ def main():
 
     # Print configuration
     print_header(" PARAMETERS ")
-    print(f"T = {T}, N = {N}, a = {a}, epsilon = {epsilon}, p = {p}")
+    print(f"T = {T}, N = {N_init}, a = {a}, epsilon = {epsilon}, p = {p}")
     print(f"num_simulations = {num_simulations}")
     print(f"time_steps = {time_steps}")
     print_header(" SAVING OPTIONS ")
@@ -38,7 +38,7 @@ def main():
     print("\n")
 
     # Prepare folders
-    create_folders(epsilon, save_matrix, save_states, N, num_simulations, results_dir=results_dir)
+    create_folders(epsilon, save_matrix, save_states, N_init, num_simulations, results_dir=results_dir)
 
     # Run simulations
     sim_real = 1
@@ -53,6 +53,9 @@ def main():
             os.makedirs(simulation_dir, exist_ok=True)
 
             for k, eps in enumerate(epsilon):
+                # IMPORTANT: each epsilon condition starts from the same initial node count
+                # (do not inherit reduced N from a previous epsilon run).
+                N = N_init
                 M0 = (np.random.rand(N, N) < p).astype(np.float64)
                 M0 = np.triu(M0, 1)
                 M0 += M0.T
